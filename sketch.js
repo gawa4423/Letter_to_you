@@ -60,29 +60,24 @@ function  mouseClicked(){
     }
 }
 
+//キーボードを押した時
 function keyTyped(){
     if(key === "1"){
-        img_phase=img_a;
         drawPhase=1;
         clearBox();
     }else if(key === "2"){
-        img_phase=img_b;
         drawPhase=2;
         clearBox();
     }else if(key === "3"){
-        img_phase=img_c;
         drawPhase=3;
         clearBox();
     }else if(key === "4"){
-        img_phase=img_d;
         drawPhase=4;
         clearBox();
     }else if(key === "5"){
-        img_phase=img_e;
         drawPhase=5;
         clearBox();
     }else if(key === "6"){
-        img_phase=img_f;
         drawPhase=6;
         clearBox();
     }else if(key === " "){
@@ -90,7 +85,6 @@ function keyTyped(){
             fullscreen(true);
     }else if(key === "0"){
         drawPhase=0;
-        img_phase=null;
         clearBox();
     }
 }
