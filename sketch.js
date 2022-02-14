@@ -80,6 +80,9 @@ function keyTyped(){
     }else if(key === "6"){
         drawPhase=6;
         clearBox();
+    }else if(key === "7"){
+        drawPhase=7;
+        clearBox();
     }else if(key === " "){
             //let fs = fullscreen();
             fullscreen(true);
@@ -106,10 +109,14 @@ function nazoDraw(num){
     }else if(num===1){
         text("A",-gap*0.5,-gap*0.5)
         moji=moji_a;
+
+        strokeWeight(2);
         lineDraw(0,0,0,5);
         lineDraw(0,0,5,0);
         lineDraw(5,0,5,5);
         lineDraw(0,5,5,5);
+
+        strokeWeight(1);
         lineDraw(1,0,1,4);
         lineDraw(1,4,2,4);
         lineDraw(2,1,2,3);
@@ -117,7 +124,8 @@ function nazoDraw(num){
         lineDraw(4,1,4,3);
         lineDraw(3,0,3,2);
         lineDraw(3,3,3,5);
-        lineDraw(4,4,5,4);       
+        lineDraw(4,4,5,4); 
+        strokeWeight(1);      
     }else if(num===2){
         text("B",-gap*0.5,-gap*0.5)
         moji=moji_b;
@@ -164,6 +172,8 @@ function nazoDraw(num){
     }else if(num===6){
         text("F",-gap*0.5,-gap*0.5);
         moji=moji_f;
+    }else if(num===7){
+        text("例",-gap*0.5,-gap*0.5)
     }
 
 
