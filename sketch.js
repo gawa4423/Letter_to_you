@@ -1,24 +1,16 @@
-// let img_0,img_a,img_b,img_c,img_d,img_e,img_f;
 
-// function preload(){
-//     img_0 = loadImage('img/0.png')
-//     img_a = loadImage('img/a.png')
-//     img_b = loadImage('img/b.png')
-//     img_c = loadImage('img/c.png')
-//     img_d = loadImage('img/d.png')
-//     img_e = loadImage('img/e.png')
-//     img_f = loadImage('img/f.png')
-// }
-
-// let img_phase;
-
+//黒マス
 let boxArray=[];
+
+let point=0;
 
 let startX=309,startY=36;
 let gap=663/5;
+let zoom=0.6;
+
 let drawPhase=0;
 
-let zoom=0.6;
+let keyBuffer=0;
 
 function setup() {
     //キャンバス作成
@@ -39,12 +31,12 @@ function draw() {
 
     push();
 
-    translate(startX,startY);
-    //問題描画
-    nazoDraw(drawPhase);
+        translate(startX,startY);
+        //問題描画
+        nazoDraw(drawPhase);
 
-    //黒四角描画
-    boxDraw(drawPhase);
+        //黒四角描画
+        boxDraw(drawPhase);
 
     pop();
 }
@@ -58,57 +50,66 @@ function  mouseClicked(){
         let col = Math.floor((y-startY)/gap);
         boxArray[row][col] = !boxArray[row][col];
     }
+    //得点更新
+    point=pointUpdate();
+
 }
 
 //キーボードを押した時
 function keyTyped(){
-    if(key === "1"){
+    if(key === "1" && keyBuffer==="1"){
         drawPhase=1;
         clearBox();
-    }else if(key === "2"){
+    }else if(key === "2"&& keyBuffer==="2"){
         drawPhase=2;
         clearBox();
-    }else if(key === "3"){
+    }else if(key === "3"&& keyBuffer==="3"){
         drawPhase=3;
         clearBox();
-    }else if(key === "4"){
+    }else if(key === "4"&& keyBuffer==="4"){
         drawPhase=4;
         clearBox();
-    }else if(key === "5"){
+    }else if(key === "5"&& keyBuffer==="5"){
         drawPhase=5;
         clearBox();
-    }else if(key === "6"){
+    }else if(key === "6"&& keyBuffer==="6"){
         drawPhase=6;
         clearBox();
-    }else if(key === "7"){
+    }else if(key === "7"&& keyBuffer==="7"){
         drawPhase=7;
         clearBox();
-    }else if(key === " "){
+    }else if(key === " "&& keyBuffer===" "){
             //let fs = fullscreen();
             fullscreen(true);
-    }else if(key === "0"){
+    }else if(key === "0"&& keyBuffer==="0"){
         drawPhase=0;
         clearBox();
     }
+    //得点更新
+    point=pointUpdate();
+
+    keyBuffer=key;
 }
 
 //問題描画
 function nazoDraw(num){
-    let moji=null;
+    let moji=mojiList[num];
+
+    //5*5枠　描画
+    drawingContext.setLineDash([0.5, 4]);
     if(num!==0){
         for(let i=0;i<=5;i++){
-            drawingContext.setLineDash([0.5, 4]);
             line(gap*i,0,gap*i,gap*5);
             line(0,gap*i,gap*5,gap*i);
         }
     }
     drawingContext.setLineDash([]);
+
+
     if(num===0){
         text("このままお待ちください",gap*2.5,gap*2.5)
-        moji=null;
     }else if(num===1){
         text("A",-gap*0.5,-gap*0.5)
-        moji=moji_a;
 
         strokeWeight(2);
         lineDraw(0,0,0,5);
@@ -128,16 +129,14 @@ function nazoDraw(num){
         strokeWeight(1);      
     }else if(num===2){
         text("B",-gap*0.5,-gap*0.5)
-        moji=moji_b;
     }else if(num===3){
         text("C",-gap*0.5,-gap*0.5)
-        moji=moji_c;
         rect(gap*0,gap*1,gap,gap*3);
         rect(gap*2,gap*1,gap,gap);
         rect(gap*2,gap*3,gap,gap);
     }else if(num===4){
         text("D",-gap*0.5,-gap*0.5)
-        moji=moji_d;
+
         textSize(textSize()*0.7);
         text("ろくろ",gap*4.5,gap*3.5)
         textSize();
@@ -168,29 +167,33 @@ function nazoDraw(num){
 
     }else if(num===5){
         text("E",-gap*0.5,-gap*0.5);
-        moji=moji_e;
     }else if(num===6){
         text("F",-gap*0.5,-gap*0.5);
-        moji=moji_f;
     }else if(num===7){
         text("例",-gap*0.5,-gap*0.5)
     }
 
-
-    if(moji){   
+    //文字描画
+    if(drawPhase!==0){   
         for(let i=0;i<5;i++){
             for(let j=0;j<5;j++){
-                if(moji[i][j]){
+                //i列j行目が存在し、*でない
+                if(moji[i][j] &&moji[i][j]!=="*"){
                     text(moji[i][j],gap*(j+0.5),gap*(i+0.5));
                 }
             }
         }
+        //得点描画
+        textSize(30*windowHeight/600*0.7);
+        text("黒マスの数 : "+point,gap*4,gap*5.5);
     }
+
 
 
 }
 
 
+//線を引く
 function lineDraw(psx,psy,pex,pey){
     line(psy*gap,psx*gap,pey*gap,pex*gap);    
 }
@@ -220,7 +223,7 @@ function clearBox(){
 }
 
 
-//ウィンドウサイズ変更
+//ウィンドウサイズ変更時に自動的に呼ばれる
 function windowResized() {
     windowSet();
 }
@@ -234,6 +237,33 @@ function windowSet(){
     textSize(30*windowHeight/600);
 }
 
+//得点更新
+function pointUpdate(){
+    let newPoint=0;
+    let moji = mojiList[drawPhase];
+    if(moji){
+        for(let i=0;i<5;i++){
+            for(let j=0;j<5;j++){
+                //i列j行目がtrue or 問題文に黒マスがある
+                if(boxArray[i][j]===true || moji[j][i]==="*"){
+                    newPoint++;
+                }
+            }
+        }
+    }
+
+    return newPoint;
+}
+
+
+//盤面上の文字
+const moji_null=[
+    ["","","","",""],
+    ["","","","",""],
+    ["","","","",""],
+    ["","","","",""],
+    ["","","","",""]
+];
 const moji_a=[
     ["S","","イ","",""],
     ["","","","",""],
@@ -250,16 +280,16 @@ const moji_b=[
 ];
 const moji_c=[
     ["","","","1",""],
-    ["","","","",""],
-    ["","","","",""],
-    ["","","","2",""],
+    ["*","","*","",""],
+    ["*","","","",""],
+    ["*","","*","2",""],
     ["","","","",""]
 ];
 const moji_d=[
-    ["","","","=","?"],
+    ["*","","","=","?"],
     ["","","＝","","顔"],
     ["","","","＝","気合"],
-    ["","","","＝",""],
+    ["","*","","＝",""],
     ["？","の","国","は","何"]
 ];
 const moji_e=[
@@ -277,3 +307,4 @@ const moji_f=[
     ["A","U","S","の","4"]
 ];
 
+const mojiList = [moji_null,moji_a,moji_b,moji_c,moji_d,moji_e,moji_f,moji_null];
