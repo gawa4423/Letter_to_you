@@ -8,7 +8,7 @@ let startX=309,startY=36;
 let gap=663/5;
 let zoom=0.6;
 
-let drawPhase=5;
+let drawPhase=0;
 
 let keyBuffer=0;
 
