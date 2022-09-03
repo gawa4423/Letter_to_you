@@ -75,14 +75,13 @@ function keyTyped(){
     }else if(key === "6"&& keyBuffer==="6"){
         drawPhase=6;
         clearBox();
-    }else if(key === "7"&& keyBuffer==="7"){
-        drawPhase=7;
-        clearBox();
     }else if(key === " "&& keyBuffer===" "){
             //let fs = fullscreen();
             fullscreen(true);
+            drawPhase=0;
+            clearBox();
     }else if(key === "0"&& keyBuffer==="0"){
-        drawPhase=0;
+        drawPhase=7;
         clearBox();
     }
     //得点更新
